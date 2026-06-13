@@ -80,36 +80,6 @@ The project demonstrates modern full-stack development principles including:
 
 ---
 
-## 📸 Screenshots
-
-> Replace these placeholders with actual screenshots before final submission.
-
-### Dashboard
-
-```text
-screenshots/dashboard.png
-```
-
-### Post Detail Page
-
-```text
-screenshots/post-detail.png
-```
-
-### Nested Comments
-
-```text
-screenshots/comments.png
-```
-
-### Authentication
-
-```text
-screenshots/auth.png
-```
-
----
-
 ## 🏗️ System Architecture
 
 ### Backend Request Flow
@@ -252,7 +222,7 @@ ThreadForge/
 ### Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/<your-username>/ThreadForge.git
 
 cd ThreadForge
 ```
@@ -317,35 +287,6 @@ Build frontend:
 npm run build
 ```
 
----
-
-## 🌐 Development URLs
-
-| Service      | URL                          |
-| ------------ | ---------------------------- |
-| Frontend     | http://localhost:5173        |
-| Backend      | http://localhost:5000        |
-| Health Check | http://localhost:5000/health |
-
----
-
-## 🔐 Environment Variables
-
-### Backend
-
-```env
-PORT=
-
-MONGO_URI=
-
-JWT_SECRET=
-
-JWT_EXPIRES_IN=
-
-CREDIT_FIRST_TERM=
-
-CREDIT_COMMON_DIFFERENCE=
-```
 ---
 
 # 📡 API Overview
@@ -911,8 +852,8 @@ The goal was not only to build a working application, but also to understand the
 
 <div align="center">
 
-### Built with React, TypeScript, Express & MongoDB
+### Built with React • TypeScript • Express • MongoDB
 
-**ThreadForge — Encouraging Meaningful Discussions Through Structured Engagement**
+ThreadForge — A Full-Stack Discussion Platform Featuring Recursive Conversations and Credit-Based Engagement
 
 </div>
