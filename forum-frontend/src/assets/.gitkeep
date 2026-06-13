@@ -1,0 +1,4 @@
+// Assets folder for static images, fonts, etc.
+// Add files here and import them in components when needed.
+
+export {};

@@ -1,440 +1,918 @@
-# ThreadForge
+<div align="center">
 
-A production-style REST API for a discussion forum with nested comments, JWT authentication, and a configurable credit reward system for post authors.
+# 🚀 ThreadForge
 
-Built with Node.js, Express, TypeScript, MongoDB, and Mongoose, the project follows a layered architecture that separates HTTP handling, business logic, and data access.
+### A Full-Stack Discussion Platform with Recursive Comments & Credit-Based Engagement
+
+Built with **React**, **TypeScript**, **Node.js**, **Express**, **MongoDB**, and a custom **Credit Reward System** designed around nested discussions.
+
+<br/>
+
+![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge\&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge\&logo=typescript)
+![NodeJS](https://img.shields.io/badge/Node.js-Backend-green?style=for-the-badge\&logo=node.js)
+![Express](https://img.shields.io/badge/Express-API-black?style=for-the-badge\&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green?style=for-the-badge\&logo=mongodb)
+![JWT](https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge)
+![Vite](https://img.shields.io/badge/Vite-Build-purple?style=for-the-badge\&logo=vite)
+
+</div>
 
 ---
 
-## Project Overview
+## 📖 Overview
 
-This backend powers a forum where authenticated users can publish posts, participate in threaded discussions, and earn credits as original posters when activity happens under their content.
+ThreadForge is a full-stack discussion platform inspired by community-driven forums and threaded conversations.
 
-The API is stateless and token-based. Passwords are hashed with bcrypt before storage, and protected routes validate JWTs on every request. Business rules—such as comment depth calculation, credit awards, and rollbacks—live in the service layer rather than in controllers or route definitions.
+Users can:
+
+* Create accounts
+* Authenticate using JWT
+* Create discussion posts
+* Participate in threaded conversations
+* Reply to comments recursively
+* Earn credits through community engagement
+* Experience automatic credit rollback when comments are deleted
+
+The project demonstrates modern full-stack development principles including:
+
+* REST API architecture
+* Authentication & authorization
+* Recursive data structures
+* Type-safe frontend and backend development
+* State management
+* API integration
+* Credit-based business logic
 
 ---
 
-## Key Features
+## ✨ Core Features
 
-### Authentication
-- User registration (`signup`) with email uniqueness validation
-- User login with credential verification
-- JWT-based session tokens with configurable expiry
-- Password hashing via bcrypt (12 salt rounds) on user creation
+### Backend Features
 
-### Posts
-- Authenticated users can create posts
-- Public feed listing all posts (newest first)
-- Public single-post retrieval with author details
-- Post creator is recorded as the Original Poster (OP)
+* JWT Authentication
+* Protected Routes
+* MongoDB + Mongoose
+* User Management
+* Post Management
+* Recursive Comment Support
+* Credit Reward System
+* Credit Rollback Logic
+* Soft Delete Comments
+* Input Validation
+* Error Handling Middleware
+* TypeScript Support
+
+### Frontend Features
+
+* React SPA (Single Page Application)
+* React Router
+* TypeScript
+* Context API Authentication
+* Protected Pages
+* Axios API Layer
+* Auto Login
+* JWT Persistence
+* Recursive Comment Rendering
+* Nested Discussion Threads
+* Responsive UI
+* TailwindCSS Styling
+
+---
+
+## 📸 Screenshots
+
+> Replace these placeholders with actual screenshots before final submission.
+
+### Dashboard
+
+```text
+screenshots/dashboard.png
+```
+
+### Post Detail Page
+
+```text
+screenshots/post-detail.png
+```
 
 ### Nested Comments
-- Unlimited comment depth via parent-child relationships
-- Root comments on posts (`depth = 1`)
-- Replies to comments (`depth = parent.depth + 1`)
-- Comment tree metadata: `postId`, `parentCommentId`, `depth`
 
-### Credit Reward System
-- OP earns credits when comments are added under their post
-- Reward amount depends on comment depth using an arithmetic progression
-- Progression parameters are stored in MongoDB (`CreditConfig`), not hardcoded in application logic
-- Initial config is seeded from environment variables on first use
-
-### Credit Rollback
-- Comment deletion triggers a soft delete (`isDeleted = true`)
-- Previously awarded credits are subtracted from the OP using the stored `reward` value
-- Only the comment author may delete their own comment
-
-### User Dashboard
-- Authenticated users can retrieve their profile and total earned credits via `GET /api/users/me`
-
----
-
-## Architecture
-
-Each request flows through a consistent pipeline:
-
-```
-HTTP Request
-    → Route          (URL mapping, middleware chain)
-    → Controller     (input validation, HTTP response)
-    → Service        (business logic)
-    → Model          (Mongoose schema / MongoDB)
-    → MongoDB
+```text
+screenshots/comments.png
 ```
 
-**Design principles**
+### Authentication
 
-| Layer | Responsibility |
-|-------|----------------|
-| **Routes** | Define endpoints and attach middleware (e.g. `protect`) |
-| **Controllers** | Validate request data, call services, format JSON responses |
-| **Services** | Encapsulate business rules (auth, credits, comment depth) |
-| **Models** | Define document schemas and database constraints |
-| **Middleware** | Cross-cutting concerns: authentication, 404, error handling |
-| **Utils** | Shared helpers: JWT, validators, `AppError`, `asyncHandler` |
-
-Centralized error handling uses a custom `AppError` class and a global error middleware. Async route handlers are wrapped with `asyncHandler` so rejected promises propagate to the error handler automatically.
-
----
-
-## Folder Structure
-
-```
-src/
-├── config/
-│   ├── db.ts              # MongoDB connection
-│   └── env.ts             # Environment variable loading and validation
-├── controllers/
-│   ├── auth.controller.ts
-│   ├── comment.controller.ts
-│   ├── post.controller.ts
-│   └── user.controller.ts
-├── middleware/
-│   ├── auth.ts            # JWT verification (protect)
-│   └── error.ts           # 404 and global error handler
-├── models/
-│   ├── Comment.ts
-│   ├── CreditConfig.ts
-│   ├── Post.ts
-│   └── User.ts
-├── routes/
-│   ├── auth.routes.ts
-│   ├── comment.routes.ts
-│   ├── post.routes.ts
-│   └── user.routes.ts
-├── services/
-│   ├── auth.service.ts
-│   ├── comment.service.ts
-│   ├── credit.service.ts
-│   ├── post.service.ts
-│   └── user.service.ts
-├── types/
-│   └── express/index.d.ts # Extends Request with req.user
-├── utils/
-│   ├── AppError.ts
-│   ├── asyncHandler.ts
-│   ├── jwt.ts
-│   └── validators.ts
-├── app.ts                 # Express app factory
-└── server.ts              # Entry point (DB connect + listen)
+```text
+screenshots/auth.png
 ```
 
 ---
 
-## Database Models
+## 🏗️ System Architecture
 
-### User
-| Field | Type | Description |
-|-------|------|-------------|
-| `name` | String | Display name |
-| `email` | String | Unique, lowercase login identifier |
-| `password` | String | Bcrypt hash (excluded from queries by default) |
-| `credits` | Number | Total credits earned (default `0`) |
-| `createdAt` / `updatedAt` | Date | Automatic timestamps |
+### Backend Request Flow
 
-Includes instance method `comparePassword()` for login verification.
+```mermaid
+flowchart LR
 
-### Post
-| Field | Type | Description |
-|-------|------|-------------|
-| `title` | String | Post subject |
-| `body` | String | Post content |
-| `author` | ObjectId → User | Original Poster |
-| `createdAt` / `updatedAt` | Date | Automatic timestamps |
+A[Client Request]
+--> B[Express Route]
 
-### Comment
-| Field | Type | Description |
-|-------|------|-------------|
-| `content` | String | Comment text |
-| `author` | ObjectId → User | Comment author |
-| `postId` | ObjectId → Post | Parent post |
-| `parentCommentId` | ObjectId → Comment \| null | `null` for root comments |
-| `depth` | Number | Nesting level (minimum `1`) |
-| `reward` | Number | Credits awarded to OP for this comment |
-| `isDeleted` | Boolean | Soft-delete flag (default `false`) |
-| `createdAt` / `updatedAt` | Date | Automatic timestamps |
+B --> C[Controller]
 
-### CreditConfig (singleton)
-| Field | Type | Description |
-|-------|------|-------------|
-| `singletonKey` | String | Always `"singleton"` — enforces one config document |
-| `firstTerm` | Number | Base reward for depth-1 comments |
-| `commonDifference` | Number | Increment added per depth level |
-| `createdAt` / `updatedAt` | Date | Automatic timestamps |
+C --> D[Service Layer]
 
----
+D --> E[MongoDB]
 
-## API Modules
+E --> D
 
-Base URL: `http://localhost:5000/api`
+D --> C
 
-All JSON responses follow `{ success: boolean, message?: string, data?: ... }`.
+C --> F[JSON Response]
 
-### Health
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `GET` | `/health` | No | Server health check |
-
-### Auth — `/api/auth`
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `POST` | `/signup` | No | Register a new user |
-| `POST` | `/login` | No | Authenticate and receive a JWT |
-
-### Posts — `/api/posts`
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `POST` | `/` | Yes | Create a post |
-| `GET` | `/` | No | List all posts (newest first) |
-| `GET` | `/:id` | No | Get a single post |
-
-### Comments — `/api/comments`
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `GET` | `/post/:postId` | No | List comments for a post |
-| `POST` | `/` | Yes | Create a root comment on a post |
-| `POST` | `/reply` | Yes | Reply to an existing comment |
-| `DELETE` | `/:id` | Yes | Soft-delete a comment (author only) |
-
-### Users — `/api/users`
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `GET` | `/me` | Yes | Current user profile and credits |
-
-### Example requests
-
-**Signup**
-```http
-POST /api/auth/signup
-Content-Type: application/json
-
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "password": "securepassword"
-}
-```
-
-**Create post (protected)**
-```http
-POST /api/posts
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "title": "Getting started with TypeScript",
-  "body": "What resources would you recommend?"
-}
-```
-
-**Reply to a comment (protected)**
-```http
-POST /api/comments/reply
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "content": "Great question!",
-  "postId": "<postId>",
-  "parentCommentId": "<commentId>"
-}
+F --> A
 ```
 
 ---
 
-## Authentication Flow
+### Frontend Architecture
 
+```mermaid
+flowchart LR
+
+A[Pages]
+
+A --> B[Components]
+
+B --> C[API Layer]
+
+C --> D[Axios Client]
+
+D --> E[Backend API]
+
+E --> D
+
+D --> C
+
+C --> B
+
+B --> A
 ```
-┌──────────┐     POST /signup or /login      ┌─────────────┐
-│  Client  │ ──────────────────────────────► │ Auth Service│
-└──────────┘                                   └──────┬──────┘
-     ▲                                                │
-     │                              bcrypt verify / hash
-     │                                                ▼
-     │                                         ┌─────────────┐
-     │         { user, token }                 │  User Model │
-     └──────────────────────────────────────── │  (MongoDB)  │
-                                               └─────────────┘
-
-Protected request:
-┌──────────┐   Authorization: Bearer <JWT>   ┌──────────────┐
-│  Client  │ ───────────────────────────────► │ protect      │
-└──────────┘                                  │ middleware   │
-                                              └──────┬───────┘
-                                                     │ verifyToken()
-                                                     │ load user → req.user
-                                                     ▼
-                                              ┌──────────────┐
-                                              │  Controller  │
-                                              └──────────────┘
-```
-
-1. **Signup** — Validates input, checks email uniqueness, creates user (password hashed in a Mongoose pre-save hook), returns JWT.
-2. **Login** — Loads user with password field, compares via `comparePassword()`, returns JWT on success.
-3. **Protected routes** — `protect` middleware extracts the Bearer token, verifies signature and expiry, loads the user, and attaches `{ id, name, email, credits }` to `req.user`.
-4. **Errors** — Missing, invalid, or expired tokens return `401`. Deleted users return `401 User no longer exists`.
 
 ---
 
-## Credit System
+### Authentication Flow
 
-Credits incentivize meaningful discussion by rewarding post authors when others comment on their posts. Deeper replies award more credits.
+```mermaid
+flowchart TD
 
-### Formula
+A[Login]
 
+--> B[Backend Verification]
+
+B --> C[JWT Token Generated]
+
+C --> D[Store in localStorage]
+
+D --> E[Axios Interceptor]
+
+E --> F[Protected Requests]
+
+F --> G[Protected Routes]
 ```
-reward = firstTerm + (depth - 1) × commonDifference
-```
-
-This is an arithmetic progression where:
-- `firstTerm` and `commonDifference` come from the `CreditConfig` collection
-- On first application run, defaults are seeded from `CREDIT_FIRST_TERM` and `CREDIT_COMMON_DIFFERENCE` environment variables
-
-### Example progression
-
-With `firstTerm = 1` and `commonDifference = 2`:
-
-| Depth | Calculation | Reward |
-|-------|-------------|--------|
-| 1 | 1 + (1 − 1) × 2 | **1 credit** |
-| 2 | 1 + (2 − 1) × 2 | **3 credits** |
-| 3 | 1 + (3 − 1) × 2 | **5 credits** |
-
-Default environment values (`firstTerm = 10`, `commonDifference = 5`) produce rewards of 10, 15, 20, … at depths 1, 2, 3, …
-
-### Award flow
-
-1. User creates a comment → depth is calculated (1 for post replies, `parent.depth + 1` for nested replies)
-2. `getCreditConfigOrCreateDefault()` reads config from MongoDB
-3. `calculateReward()` computes the amount
-4. Comment is saved with the `reward` field
-5. OP's `credits` field is incremented via `$inc`
-
-### Rollback flow
-
-1. Comment author deletes their comment
-2. Service verifies ownership
-3. OP's credits are decremented by the stored `reward` value
-4. Comment is marked `isDeleted = true` (record retained for audit consistency)
 
 ---
 
-## Installation
+## 📂 Project Structure
 
-**Prerequisites**
-- Node.js 18+
-- MongoDB running locally or a remote connection string
+```text
+ThreadForge/
+│
+├── forum-backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── types/
+│   │   ├── utils/
+│   │   ├── app.ts
+│   │   └── server.ts
+│   │
+│   ├── dist/
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── forum-frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── routes/
+│   │   ├── types/
+│   │   ├── utils/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   │
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── README.md
+└── .gitignore
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer             | Technologies                         |
+| ----------------- | ------------------------------------ |
+| Frontend          | React, TypeScript, Vite, TailwindCSS |
+| Routing           | React Router                         |
+| State Management  | Context API                          |
+| API Communication | Axios                                |
+| Backend           | Node.js, Express                     |
+| Database          | MongoDB, Mongoose                    |
+| Authentication    | JWT                                  |
+| Language          | TypeScript                           |
+| Version Control   | Git & GitHub                         |
+
+---
+
+## ⚙️ Installation & Setup
+
+### Clone Repository
 
 ```bash
 git clone <repository-url>
-cd forum-backend
-npm install
-cp .env.example .env
-# Edit .env with your values
+
+cd ThreadForge
 ```
 
 ---
 
-## Environment Variables
+## Backend Setup
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `PORT` | No | `5000` | HTTP server port |
-| `MONGO_URI` | Yes | — | MongoDB connection string |
-| `JWT_SECRET` | Yes | — | Secret key for signing JWTs |
-| `JWT_EXPIRES_IN` | No | `7d` | Token expiry (jsonwebtoken format) |
-| `CREDIT_FIRST_TERM` | Yes | — | Initial `firstTerm` for credit config seed |
-| `CREDIT_COMMON_DIFFERENCE` | Yes | — | Initial `commonDifference` for credit config seed |
+```bash
+cd forum-backend
 
-Example `.env`:
+npm install
+```
+
+Create a `.env` file:
 
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/forum
-JWT_SECRET=your-secret-key
+
+MONGO_URI=your_mongodb_connection_string
+
+JWT_SECRET=your_secret_key
+
 JWT_EXPIRES_IN=7d
-CREDIT_FIRST_TERM=10
-CREDIT_COMMON_DIFFERENCE=5
+
+CREDIT_FIRST_TERM=1
+
+CREDIT_COMMON_DIFFERENCE=2
 ```
 
----
-
-## Running Locally
-
-**Development** (hot reload with `tsx`):
+Run backend:
 
 ```bash
 npm run dev
 ```
 
-**Production build**:
+Build backend:
 
 ```bash
 npm run build
-npm start
 ```
 
-Verify the server:
+---
+
+## Frontend Setup
 
 ```bash
-curl http://localhost:5000/health
-# {"success":true,"message":"OK"}
+cd forum-frontend
+
+npm install
+```
+
+Run frontend:
+
+```bash
+npm run dev
+```
+
+Build frontend:
+
+```bash
+npm run build
 ```
 
 ---
 
-## Future Frontend Integration
+## 🌐 Development URLs
 
-This API is designed to be consumed by a separate frontend (React, Next.js, Vue, etc.) without modification.
-
-**Integration notes**
-
-- Store the JWT from signup/login responses (e.g. in memory, `localStorage`, or an HTTP-only cookie managed by a BFF)
-- Send `Authorization: Bearer <token>` on all protected requests
-- Build the comment tree client-side using `parentCommentId` and `depth` from `GET /api/comments/post/:postId`
-- Filter out comments where `isDeleted === true` when rendering threads
-- Use `GET /api/users/me` for the user dashboard and credit display
-- Public endpoints (`GET /api/posts`, `GET /api/posts/:id`, comment listing) require no authentication
-
-**Suggested UI surfaces**
-
-| Surface | Endpoints |
-|---------|-----------|
-| Auth pages | `POST /api/auth/signup`, `POST /api/auth/login` |
-| Feed | `GET /api/posts` |
-| Post detail + thread | `GET /api/posts/:id`, `GET /api/comments/post/:postId` |
-| Create post | `POST /api/posts` |
-| Comment / reply | `POST /api/comments`, `POST /api/comments/reply` |
-| User dashboard | `GET /api/users/me` |
+| Service      | URL                          |
+| ------------ | ---------------------------- |
+| Frontend     | http://localhost:5173        |
+| Backend      | http://localhost:5000        |
+| Health Check | http://localhost:5000/health |
 
 ---
 
-## Future Improvements
+## 🔐 Environment Variables
 
-- Filter soft-deleted comments in the list endpoint
-- Admin API to update `CreditConfig` without direct database access
-- Pagination and sorting options for posts and comments
-- Request rate limiting and security headers (e.g. Helmet)
-- Input sanitization and stricter password policies
-- Automated test suite (unit + integration)
-- OpenAPI / Swagger documentation
-- Docker Compose setup for local MongoDB + API
+### Backend
+
+```env
+PORT=
+
+MONGO_URI=
+
+JWT_SECRET=
+
+JWT_EXPIRES_IN=
+
+CREDIT_FIRST_TERM=
+
+CREDIT_COMMON_DIFFERENCE=
+```
+---
+
+# 📡 API Overview
+
+## Authentication
+
+| Method | Endpoint           | Description           |
+| ------ | ------------------ | --------------------- |
+| POST   | `/api/auth/signup` | Register a new user   |
+| POST   | `/api/auth/login`  | Login and receive JWT |
 
 ---
 
-## Technologies Used
+## Users
 
-| Technology | Purpose |
-|------------|---------|
-| [Node.js](https://nodejs.org/) | Runtime |
-| [Express](https://expressjs.com/) | HTTP framework |
-| [TypeScript](https://www.typescriptlang.org/) | Static typing |
-| [MongoDB](https://www.mongodb.com/) | Document database |
-| [Mongoose](https://mongoosejs.com/) | ODM / schema modeling |
-| [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) | JWT creation and verification |
-| [bcrypt](https://github.com/kelektiv/node.bcrypt.js) | Password hashing |
-| [dotenv](https://github.com/motdotla/dotenv) | Environment configuration |
-| [tsx](https://github.com/privatenumber/tsx) | TypeScript execution (development) |
+| Method | Endpoint        | Description                    |
+| ------ | --------------- | ------------------------------ |
+| GET    | `/api/users/me` | Get current authenticated user |
 
 ---
+
+## Posts
+
+| Method | Endpoint         | Description       |
+| ------ | ---------------- | ----------------- |
+| GET    | `/api/posts`     | Get all posts     |
+| GET    | `/api/posts/:id` | Get a single post |
+| POST   | `/api/posts`     | Create a new post |
+
+---
+
+## Comments
+
+| Method | Endpoint                     | Description                 |
+| ------ | ---------------------------- | --------------------------- |
+| GET    | `/api/comments/post/:postId` | Get all comments for a post |
+| POST   | `/api/comments`              | Create root comment         |
+| POST   | `/api/comments/reply`        | Create nested reply         |
+| DELETE | `/api/comments/:id`          | Soft delete comment         |
+
+---
+
+# 💰 Credit System Logic
+
+One of the unique features of ThreadForge is its engagement-based credit system.
+
+Instead of awarding fixed credits for every interaction, comment rewards follow an Arithmetic Progression.
+
+### Formula
+
+```text
+Reward = First Term + (Depth - 1) × Common Difference
+```
+
+Current configuration:
+
+```text
+First Term = 1
+Common Difference = 2
+```
+
+---
+
+### Example
+
+| Comment Depth | Reward    |
+| ------------- | --------- |
+| Root Comment  | 1 Credit  |
+| Reply Level 1 | 3 Credits |
+| Reply Level 2 | 5 Credits |
+| Reply Level 3 | 7 Credits |
+| Reply Level 4 | 9 Credits |
+
+---
+
+### Example Thread
+
+```text
+Post
+│
+├── Comment A (+1)
+│
+└── Comment B (+3)
+     │
+     └── Comment C (+5)
+```
+
+Total Credits Earned:
+
+```text
+1 + 3 + 5 = 9 Credits
+```
+
+These credits are awarded to the original post author.
+
+---
+
+## Credit Rollback
+
+When a comment is deleted:
+
+* The comment remains in the database.
+* The reward associated with that comment is removed from the post author's credits.
+* Thread structure remains intact.
+
+Example:
+
+```text
+Credits Before Delete = 9
+
+Delete Comment C
+
+Credits After Delete = 4
+```
+
+---
+
+# 🌳 Recursive Comment System
+
+ThreadForge supports unlimited nested replies.
+
+Comments are stored in MongoDB using a parent-child relationship.
+
+Example:
+
+```json
+{
+  "_id": "comment-b",
+  "parentCommentId": "comment-a"
+}
+```
+
+---
+
+## Backend Storage Structure
+
+```text
+Comment A
+│
+└── Comment B
+     │
+     └── Comment C
+```
+
+Stored as:
+
+```text
+A → parent = null
+
+B → parent = A
+
+C → parent = B
+```
+
+---
+
+## Frontend Tree Builder
+
+The backend returns comments as a flat array.
+
+Example:
+
+```text
+A
+B (parent A)
+C (parent B)
+D
+```
+
+The frontend converts this into:
+
+```text
+A
+└── B
+     └── C
+
+D
+```
+
+using:
+
+```text
+buildCommentTree()
+```
+
+located inside:
+
+```text
+src/utils/buildCommentTree.ts
+```
+
+---
+
+## Rendering Strategy
+
+The UI uses recursive React components.
+
+```text
+CommentItem
+└── CommentItem
+     └── CommentItem
+          └── CommentItem
+```
+
+This allows unlimited nesting depth while keeping the code simple and scalable.
+
+---
+
+# 🧠 Challenges Faced
+
+During development several engineering challenges were encountered.
+
+---
+
+### Recursive Comment Design
+
+Designing a system capable of supporting unlimited nested replies required careful consideration of:
+
+* Parent-child relationships
+* Database schema design
+* Depth calculations
+* UI rendering
+
+---
+
+### Credit Reward Calculation
+
+The reward system needed to:
+
+* Scale with nesting depth
+* Remain predictable
+* Support rollback
+* Prevent incorrect credit calculations
+
+An Arithmetic Progression model was chosen because it remains simple while encouraging deeper discussions.
+
+---
+
+### Frontend State Synchronization
+
+User credits must update instantly after:
+
+* Creating comments
+* Replying
+* Deleting comments
+
+This required coordinated updates between:
+
+* Backend API
+* React Context
+* Component State
+
+---
+
+### Authentication Persistence
+
+Users should remain logged in after page refresh.
+
+This was implemented using:
+
+* JWT Tokens
+* localStorage
+* Axios Interceptors
+* Context API
+* Auto User Validation
+
+---
+
+### Recursive UI Rendering
+
+Rendering deeply nested discussions while preserving thread structure required:
+
+* Tree building algorithms
+* Recursive components
+* Dynamic indentation
+
+---
+
+# 🐛 Debugging & Issues Resolved
+
+Several real-world issues were identified and resolved during development.
+
+---
+
+### Missing Comment Route
+
+Issue:
+
+```text
+GET /api/comments/post/:postId
+
+returned
+
+Route Not Found
+```
+
+Cause:
+
+The route existed in the service layer but was not exposed through Express routes and controllers.
+
+Resolution:
+
+Added:
+
+```text
+GET /comments/post/:postId
+```
+
+controller and route integration.
+
+---
+
+### Invalid JWT Header
+
+Issue:
+
+```text
+Invalid or expired token
+```
+
+Cause:
+
+Bearer token was wrapped in quotation marks.
+
+Resolution:
+
+Removed quotes and sent:
+
+```text
+Authorization: Bearer token_here
+```
+
+---
+
+### Frontend-Backend Connectivity
+
+Issue:
+
+Frontend could not communicate with backend.
+
+Cause:
+
+Incorrect API routing configuration.
+
+Resolution:
+
+Configured Vite proxy and centralized Axios client.
+
+---
+
+### Comment Tree Rendering
+
+Issue:
+
+Nested replies were displayed as flat comments.
+
+Resolution:
+
+Implemented:
+
+```text
+buildCommentTree()
+```
+
+using a two-pass Map-based approach.
+
+---
+
+### Credit Rollback Validation
+
+Issue:
+
+Needed to ensure credits were correctly removed when comments were deleted.
+
+Resolution:
+
+Extensive testing confirmed:
+
+```text
+Create Comment
+→ Add Credits
+
+Delete Comment
+→ Remove Credits
+```
+
+worked correctly.
+
+---
+
+# 📚 What We Learned
+
+This project provided hands-on experience with modern full-stack application development.
+
+Key learning outcomes included:
+
+### Backend
+
+* Express Architecture
+* Service Layer Pattern
+* MongoDB Relationships
+* JWT Authentication
+* Middleware Design
+* Error Handling
+* TypeScript in Backend Development
+
+### Frontend
+
+* React Component Architecture
+* Context API
+* Protected Routes
+* React Router
+* Axios Interceptors
+* Recursive Rendering
+* State Synchronization
+
+### Full Stack
+
+* API Design
+* Client-Server Communication
+* Authentication Workflows
+* Production Builds
+* Debugging Strategies
+* End-to-End Testing
+
+---
+
+# 🚀 Future Improvements
+
+Potential enhancements for future versions of ThreadForge:
+
+---
+
+### Community Features
+
+* User Profiles
+* Profile Pictures
+* Follow System
+* User Reputation
+* Leaderboards
+
+---
+
+### Content Features
+
+* Rich Text Editor
+* Markdown Support
+* Image Uploads
+* File Attachments
+* Post Categories
+* Tags
+
+---
+
+### Real-Time Features
+
+* Live Notifications
+* WebSockets
+* Real-Time Comments
+* Live Credit Updates
+
+---
+
+### AI Features
+
+* AI Content Moderation
+* Toxicity Detection
+* AI Discussion Summaries
+* AI Topic Suggestions
+* AI-Powered Search
+
+---
+
+### Platform Improvements
+
+* Search & Filtering
+* Pagination
+* Infinite Scrolling
+* Dark Mode
+* Better Mobile Experience
+
+---
+
+### Engineering Improvements
+
+- Docker Support
+- CI/CD Pipeline
+- Unit Testing
+- Integration Testing
+- API Documentation
+- Redis Caching
+- Rate Limiting
+
+---
+
+# 🚀 Running the Application
+
+## Start the Backend
+
+```bash
+cd forum-backend
+
+npm install
+
+npm run dev
+```
+
+The backend will start on the configured port (default: `5000`).
+
+---
+
+## Start the Frontend
+
+```bash
+cd forum-frontend
+
+npm install
+
+npm run dev
+```
+
+The frontend will start using Vite's development server.
+
+---
+
+## Production Builds
+
+### Backend
+
+```bash
+cd forum-backend
+
+npm run build
+```
+
+### Frontend
+
+```bash
+cd forum-frontend
+
+npm run build
+```
+
+Both applications were successfully built and validated before submission.
+
+---
+
+# 🤝 Acknowledgements
+
+This project was built as part of a full-stack internship assignment focused on:
+
+- Backend API Design
+- Authentication & Authorization
+- Recursive Data Structures
+- Business Logic Implementation
+- React SPA Development
+- TypeScript Adoption
+- End-to-End Integration
+
+The goal was not only to build a working application, but also to understand the architecture, reasoning, debugging process, and engineering decisions behind it.
+
+---
+
+<div align="center">
+
+### Built with React, TypeScript, Express & MongoDB
+
+**ThreadForge — Encouraging Meaningful Discussions Through Structured Engagement**
+
+</div>

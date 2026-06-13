@@ -25,6 +25,7 @@
  * - Error handler MUST be last (catches everything above)
  */
 
+import cors from 'cors';
 import express from 'express';
 
 import authRoutes from './routes/auth.routes';
@@ -53,6 +54,9 @@ export const createApp = () => {
   // Example: { "name": "John" } → req.body = { name: "John" }
   // Without this, req.body would be undefined
   app.use(express.json());
+
+  // Allow the React dev server (and other origins) to call this API
+  app.use(cors());
 
   // HEALTH CHECK ENDPOINT
   // Used by load balancers and monitoring to check if server is alive
