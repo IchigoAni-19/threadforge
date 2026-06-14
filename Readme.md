@@ -214,11 +214,6 @@ Frontend is deployed on Vercel.
 
 Backend is deployed on Render.
 
-Production environment variable:
-
-```env
-VITE_API_URL=https://threadforge-nirs.onrender.com/api
-```
 
 ---
 
