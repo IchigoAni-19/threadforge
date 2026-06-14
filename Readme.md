@@ -162,16 +162,6 @@ npm install
 npm run dev
 ```
 
-Create a `.env` file:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-CREDIT_FIRST_TERM=1
-CREDIT_COMMON_DIFFERENCE=2
-```
-
 ### Frontend
 
 ```bash
@@ -180,12 +170,6 @@ cd forum-frontend
 npm install
 
 npm run dev
-```
-
-Create a `.env` file:
-
-```env
-VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
